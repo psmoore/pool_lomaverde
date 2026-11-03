@@ -155,7 +155,7 @@ page("lessons.html", "Swim Lessons", f"""
     <p class="lede">Group and private lessons in the warm recreation pool, in monthly sessions of 30-minute classes. {REGISTER}</p>
     <div class="top2">
       <aside class="hours"><h2>Lesson times</h2>
-        <div {live("hours", format="dl", title="Swim Lessons", whole=0)}><p class="muted">…</p></div>
+        <p {live("when", title="Swim Lessons", gap=-1)}>…</p>
         <p class="small muted" style="margin:6px 0 0">Classes run back to back inside these blocks; pick a level and time in the catalog.</p>
       </aside>
       <aside class="hours"><h2>Coming dates</h2>
@@ -183,7 +183,11 @@ page("fitness.html", "Water Fitness", f"""
 
 # ── Rentals ──────────────────────────────────────────────────────────────────
 RATES = [("Shared use", "$45", "$89", "$89", "$177"), ("Exclusive use", "$48", "$94", "$94", "$189"), ("Swim lane", "$9", "$20", "$20", "$37")]
-rates = "".join(f"<tr><th>{E(a)}</th><td>{b}</td><td>{c}</td><td>{d}</td><td>{e}</td></tr>" for a, b, c, d, e in RATES)
+def rate_table(who, i):
+    rows = "".join(f"<tr><th>{E(r[0])}</th><td>{r[i]}</td><td>{r[i + 1]}</td></tr>" for r in RATES)
+    return (f'<h3>{E(who)}</h3><div class="tblwrap"><table class="prog"><tr><th>Facility</th><td><b>Non-prime time</b></td>'
+            f'<td><b>Prime time</b></td></tr>{rows}</table></div>')
+rates = rate_table("Resident / non-profit", 1) + rate_table("Non-resident / for-profit", 3)
 page("rentals.html", "Rentals", f"""
     <p class="lede">Loma Verde Aquatic Center has many opportunities to meet your facility use needs, from a few swim lanes to the whole
       pool, swim meets and water polo games.</p>
@@ -192,10 +196,7 @@ page("rentals.html", "Rentals", f"""
     {LANES}
     <h2>Rental fees</h2>
     <p class="small muted" style="margin-top:0">Hourly; staff fees not included.</p>
-    <div class="tblwrap"><table class="prog">
-      <tr><th></th><td><b>Resident / non-profit, non-prime</b></td><td><b>Resident / non-profit, prime</b></td><td><b>Non-resident / for-profit, non-prime</b></td><td><b>Non-resident / for-profit, prime</b></td></tr>
-      {rates}
-    </table></div>
+    {rates}
     <p class="small">Non-prime time: Monday–Friday open to 5:00 PM, and Sunday all day. Prime time: Monday–Friday 5:00 PM to close, Saturday
       all day, and city-recognized holidays.</p>
     <h2>Reserving</h2>
